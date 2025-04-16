@@ -4,7 +4,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
-# 从测试号信息获取
+# 从环境变量获取微信公众号信息
 appID = os.environ.get("APP_ID")
 appSecret = os.environ.get("APP_SECRET")
 # 收信人ID即 用户列表中的微信号
@@ -13,14 +13,15 @@ openId = os.environ.get("OPEN_ID")
 weather_template_id = os.environ.get("TEMPLATE_ID")
 
 def get_weather(my_city):
-    urls = ["http://www.weather.com.cn/textFC/hb.shtml",
-            "http://www.weather.com.cn/textFC/db.shtml",
-            "http://www.weather.com.cn/textFC/hd.shtml",
-            "http://www.weather.com.cn/textFC/hz.shtml",
-            "http://www.weather.com.cn/textFC/hn.shtml",
-            "http://www.weather.com.cn/textFC/xb.shtml",
-            "http://www.weather.com.cn/textFC/xn.shtml"
-            ]
+    urls = [
+        "http://www.weather.com.cn/textFC/hb.shtml",  # 华北
+        "http://www.weather.com.cn/textFC/db.shtml",  # 东北
+        "http://www.weather.com.cn/textFC/hd.shtml",  # 华东
+        "http://www.weather.com.cn/textFC/hz.shtml",  # 华中
+        "http://www.weather.com.cn/textFC/hn.shtml",  # 华南
+        "http://www.weather.com.cn/textFC/xb.shtml",  # 西北
+        "http://www.weather.com.cn/textFC/xn.shtml"   # 西南
+    ]
     for url in urls:
         resp = requests.get(url)
         text = resp.content.decode("utf-8")
@@ -60,8 +61,7 @@ def get_weather(my_city):
 
 def get_access_token():
     # 获取access token的url
-    url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}' \
-        .format(appID.strip(), appSecret.strip())
+    url = f'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appID.strip()}&secret={appSecret.strip()}'
     response = requests.get(url).json()
     print(response)
     access_token = response.get('access_token')
@@ -113,9 +113,8 @@ def send_weather(access_token, weather):
             }
         }
     }
-    url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}'.format(access_token)
+    url = f'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={access_token}'
     print(requests.post(url, json.dumps(body)).text)
-
 
 
 def weather_report(this_city):
@@ -128,6 +127,5 @@ def weather_report(this_city):
     send_weather(access_token, weather)
 
 
-
 if __name__ == '__main__':
-    weather_report("淄博")
+    weather_report("昭通")
