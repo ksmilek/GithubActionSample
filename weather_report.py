@@ -8,9 +8,16 @@ from bs4 import BeautifulSoup
 appID = os.environ.get("APP_ID")
 appSecret = os.environ.get("APP_SECRET")
 # 收信人ID列表，用逗号分隔
-openIds = os.environ.get("OPEN_IDS").split(',')
+openIds_str = os.environ.get("OPEN_IDS")
+if openIds_str is None:
+    print("Error: Environment variable 'OPEN_IDS' is not set.")
+    exit(1)
+openIds = openIds_str.split(',')
 # 天气预报模板ID
 weather_template_id = os.environ.get("TEMPLATE_ID")
+if weather_template_id is None:
+    print("Error: Environment variable 'TEMPLATE_ID' is not set.")
+    exit(1)
 
 def get_weather(my_city):
     urls = [
