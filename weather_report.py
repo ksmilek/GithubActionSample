@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 appID = os.environ.get("APP_ID")
 appSecret = os.environ.get("APP_SECRET")
 # 收信人ID列表，用逗号分隔
-openIds_str = os.environ.get("OPEN_IDS")
+openIds_str = os.environ.get("OPEN_ID")
 if openIds_str is None:
     print("Error: Environment variable 'OPEN_IDS' is not set.")
     exit(1)
