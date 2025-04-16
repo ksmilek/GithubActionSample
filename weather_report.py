@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 # 从环境变量获取微信公众号信息
 appID = os.environ.get("APP_ID")
 appSecret = os.environ.get("APP_SECRET")
-# 收信人ID即 用户列表中的微信号
-openId = os.environ.get("OPEN_ID")
+# 收信人ID列表，用逗号分隔
+openIds = os.environ.get("OPEN_IDS").split(',')
 # 天气预报模板ID
 weather_template_id = os.environ.get("TEMPLATE_ID")
 
@@ -78,7 +78,7 @@ def get_daily_love():
     return daily_love
 
 
-def send_weather(access_token, weather):
+def send_weather(access_token, weather, openId):
     # touser 就是 openID
     # template_id 就是模板ID
     # url 就是点击模板跳转的url
@@ -123,8 +123,9 @@ def weather_report(this_city):
     # 2. 获取天气
     weather = get_weather(this_city)
     print(f"天气信息： {weather}")
-    # 3. 发送消息
-    send_weather(access_token, weather)
+    # 3. 发送消息给所有 OpenID
+    for openId in openIds:
+        send_weather(access_token, weather, openId)
 
 
 if __name__ == '__main__':
